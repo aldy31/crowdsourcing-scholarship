@@ -39,11 +39,13 @@ contract Genesis {
         address owner;
         string title;
         string description;
-        string imageURL;
         uint cost;
+        uint expiresAt;
+        string uploadedImageCID;
+        string uploadedTTDimage;
+        string uploadedsyarat;
         uint raised;
         uint timestamp;
-        uint expiresAt;
         uint backers;
         statusEnum status;
     }
@@ -60,6 +62,14 @@ contract Genesis {
         uint256 timestamp
     );
 
+    event ProjectCreated (
+        uint256 id,
+        string title,
+        address owner,
+        string actionType,
+        uint256 timestamp
+    );
+
     constructor(uint _projectTax) {
         owner = msg.sender;
         projectTax = _projectTax;
@@ -68,13 +78,17 @@ contract Genesis {
     function createProject(
         string memory title,
         string memory description,
-        string memory imageURL,
         uint cost,
-        uint expiresAt
+        uint expiresAt,
+        string memory uploadedImageCID,
+        string memory uploadedTTDimage,
+        string memory uploadedsyarat
     ) public returns (bool) {
         require(bytes(title).length > 0, "Title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
-        require(bytes(imageURL).length > 0, "ImageURL cannot be empty");
+        require(bytes(uploadedImageCID).length > 0, "Image ipfs cannot be empty");
+        require(bytes(uploadedTTDimage).length > 0, "TTD ipfs cannot be empty");
+        require(bytes(uploadedsyarat).length > 0, "syarat ipfs cannot be empty");
         require(cost > 0 ether, "Cost cannot be zero");
 
         projectStruct memory project;
@@ -82,8 +96,9 @@ contract Genesis {
         project.owner = msg.sender;
         project.title = title;
         project.description = description;
-        project.imageURL = imageURL;
-        project.cost = cost;
+        project.uploadedImageCID = uploadedImageCID;
+        project.uploadedTTDimage = uploadedTTDimage;
+        project.uploadedsyarat = uploadedsyarat;
         project.timestamp = block.timestamp;
         project.expiresAt = expiresAt;
 
@@ -93,8 +108,8 @@ contract Genesis {
         stats.totalProjects += 1;
 
         emit Action (
-            projectCount++,
-            "PROJECT CREATED",
+           projectCount++,
+           "PROJECT CREATED",
             msg.sender,
             block.timestamp
         );
@@ -105,18 +120,25 @@ contract Genesis {
         uint id,
         string memory title,
         string memory description,
-        string memory imageURL,
+        string memory uploadedImageCID,
+        string memory uploadedTTDimage,
+        string memory uploadedsyarat,
         uint expiresAt
     ) public returns (bool) {
         require(msg.sender == projects[id].owner, "Unauthorized Entity");
         require(bytes(title).length > 0, "Title cannot be empty");
         require(bytes(description).length > 0, "Description cannot be empty");
-        require(bytes(imageURL).length > 0, "ImageURL cannot be empty");
+        require(bytes(uploadedImageCID).length > 0, "Image ipfs cannot be empty");
+        require(bytes(uploadedTTDimage).length > 0, "TTD ipfs cannot be empty");
+        require(bytes(uploadedsyarat).length > 0, "syarat ipfs cannot be empty");
 
         projects[id].title = title;
         projects[id].description = description;
-        projects[id].imageURL = imageURL;
         projects[id].expiresAt = expiresAt;
+        projects[id].uploadedImageCID = uploadedImageCID;
+        projects[id].uploadedTTDimage = uploadedTTDimage;
+        projects[id].uploadedsyarat = uploadedsyarat;
+
 
         emit Action (
             id,

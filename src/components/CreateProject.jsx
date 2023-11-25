@@ -4,13 +4,16 @@ import { toast } from 'react-toastify'
 import { createProject } from '../services/blockchain'
 import { useGlobalState, setGlobalState } from '../store'
 
+
 const CreateProject = () => {
   const [createModal] = useGlobalState('createModal')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [cost, setCost] = useState('')
   const [date, setDate] = useState('')
-  const [imageURL, setImageURL] = useState('')
+  const [uploadedImageCID, setUploadedImageCID] = useState('');
+  const [uploadedTTDimage, setUploadedTTDimage] = useState('');
+  const [uploadedsyarat, setUploadedsyarat] = useState('');
 
   const toTimestamp = (dateStr) => {
     const dateObj = Date.parse(dateStr)
@@ -19,19 +22,23 @@ const CreateProject = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    if (!title || !description || !cost || !date || !imageURL) return
+    if (!title || !description || !cost || !date || !uploadedImageCID || !uploadedTTDimage || !uploadedsyarat) return
+
 
     const params = {
       title,
       description,
       cost,
       expiresAt: toTimestamp(date),
-      imageURL,
+      uploadedImageCID,
+      uploadedTTDimage,
+      uploadedsyarat
     }
 
     await createProject(params)
-    toast.success('Project created successfully, will reflect in 30sec.')
+    toast.success('Urun Dana SUkses Dibuat')
     onClose()
+
   }
 
   const onClose = () => {
@@ -43,8 +50,11 @@ const CreateProject = () => {
     setTitle('')
     setCost('')
     setDescription('')
-    setImageURL('')
     setDate('')
+    setUploadedImageCID('')
+    setUploadedTTDimage('')
+    setUploadedsyarat('')
+
   }
 
   return (
@@ -59,7 +69,7 @@ const CreateProject = () => {
       >
         <form onSubmit={handleSubmit} className="flex flex-col">
           <div className="flex justify-between items-center">
-            <p className="font-semibold">Add Project</p>
+            <p className="font-semibold">Buka Donasi</p>
             <button
               onClick={onClose}
               type="button"
@@ -69,16 +79,18 @@ const CreateProject = () => {
             </button>
           </div>
 
+  
+
           <div className="flex justify-center items-center mt-5">
             <div className="rounded-xl overflow-hidden h-20 w-20">
-              <img
+              {/* <img
                 src={
                   imageURL ||
                   'https://media.wired.com/photos/5926e64caf95806129f50fde/master/pass/AnkiHP.jpg'
                 }
                 alt="project title"
                 className="h-full w-full object-cover cursor-pointer"
-              />
+              /> */}
             </div>
           </div>
 
@@ -92,7 +104,7 @@ const CreateProject = () => {
             focus:ring-0"
               type="text"
               name="title"
-              placeholder="Title"
+              placeholder="Nama"
               onChange={(e) => setTitle(e.target.value)}
               value={title}
               required
@@ -111,7 +123,7 @@ const CreateProject = () => {
               step={0.01}
               min={0.01}
               name="cost"
-              placeholder="cost (ETH)"
+              placeholder="Target (ETH)"
               onChange={(e) => setCost(e.target.value)}
               value={cost}
               required
@@ -128,7 +140,7 @@ const CreateProject = () => {
             focus:ring-0"
               type="date"
               name="date"
-              placeholder="Expires"
+              placeholder="Deadline"
               onChange={(e) => setDate(e.target.value)}
               value={date}
               required
@@ -143,11 +155,46 @@ const CreateProject = () => {
               className="block w-full bg-transparent
             border-0 text-sm text-slate-500 focus:outline-none
             focus:ring-0"
-              type="url"
-              name="imageURL"
-              placeholder="Image URL"
-              onChange={(e) => setImageURL(e.target.value)}
-              value={imageURL}
+              type="text"
+              name="uploadedImageCID"
+              placeholder="Gambar (URL)"
+              onChange={(e) => setUploadedImageCID(e.target.value)}
+              value={uploadedImageCID}
+              required
+            />
+          </div>
+
+          <div
+            className="flex justify-between items-center
+          bg-gray-300 rounded-xl mt-5"
+          >
+            <input
+              className="block w-full bg-transparent
+            border-0 text-sm text-slate-500 focus:outline-none
+            focus:ring-0"
+              type="text"
+              name="uploadedTTDimage"
+              placeholder="Gambar (URL)"
+              onChange={(e) => setUploadedTTDimage(e.target.value)}
+              value={uploadedTTDimage}
+              required
+            />
+          </div>
+
+
+          <div
+            className="flex justify-between items-center
+          bg-gray-300 rounded-xl mt-5"
+          >
+            <input
+              className="block w-full bg-transparent
+            border-0 text-sm text-slate-500 focus:outline-none
+            focus:ring-0"
+              type="text"
+              name="uploadedsyarat"
+              placeholder="Gambar (URL)"
+              onChange={(e) => setUploadedsyarat(e.target.value)}
+              value={uploadedsyarat}
               required
             />
           </div>
@@ -162,7 +209,7 @@ const CreateProject = () => {
             focus:ring-0"
               type="text"
               name="description"
-              placeholder="Description"
+              placeholder="Deskripsi"
               onChange={(e) => setDescription(e.target.value)}
               value={description}
               required
@@ -171,11 +218,11 @@ const CreateProject = () => {
 
           <button
             type="submit"
-            className="inline-block px-6 py-2.5 bg-green-600
+            className="inline-block px-6 py-2.5 bg-blue-600
             text-white font-medium text-md leading-tight
-            rounded-full shadow-md hover:bg-green-700 mt-5"
+            rounded-full shadow-md hover:bg-blue-700 mt-5"
           >
-            Submit Project
+            Buka Donasi
           </button>
         </form>
       </div>

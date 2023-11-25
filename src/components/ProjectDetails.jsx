@@ -12,6 +12,17 @@ const ProjectDetails = ({ project }) => {
   const [connectedAccount] = useGlobalState('connectedAccount')
   const expired = new Date().getTime() > Number(project?.expiresAt + '000')
 
+  const handleDownload = () => {
+    if (uploadedsyarat) {
+      // Ganti URL_IPFS dengan URL IPFS yang sesuai
+      const ipfsURL = `https://gateway.pinata.cloud/ipfs/${uploadedsyarat}`;
+
+      // Buka tautan IPFS di tab baru untuk memulai unduhan
+      window.open(ipfsURL, '_blank');
+    }
+  };
+
+
   return (
     <div className="pt-24 mb-5 px-6 flex justify-center">
       <div className="flex justify-center flex-col md:w-2/3">
@@ -20,7 +31,7 @@ const ProjectDetails = ({ project }) => {
         sm:space-x-4 flex-wrap"
         >
           <img
-            src={project?.imageURL}
+            src={project?.uploadedImageCID}
             alt={project?.title}
             className="rounded-xl h-64 object-cover sm:w-1/3 w-full"
           />
@@ -33,7 +44,7 @@ const ProjectDetails = ({ project }) => {
               <small className="text-gray-500">
                 {expired
                   ? 'Expired'
-                  : daysRemaining(project.expiresAt) + ' left'}
+                  : daysRemaining(project.expiresAt) }
               </small>
             </div>
 
@@ -50,7 +61,7 @@ const ProjectDetails = ({ project }) => {
                   </small>
                 ) : null}
                 <small className="text-gray-500 font-bold">
-                  {project?.backers} Backer{project?.backers == 1 ? '' : 's'}
+                  {project?.backers} Donatur{project?.backers == 1 ? '' : ''}
                 </small>
               </div>
 
@@ -72,6 +83,11 @@ const ProjectDetails = ({ project }) => {
             </div>
 
             <div>
+            <img
+                src={project?.uploadedTTDimage}
+                className="rounded-xl h-24"
+              />
+              <button onClick={handleDownload}>Unduh File yang Diunggah</button>
               <p className="text-sm font-light mt-2">{project?.description}</p>
               <div className="w-full overflow-hidden bg-gray-300 mt-4">
                 <div
@@ -85,7 +101,7 @@ const ProjectDetails = ({ project }) => {
               </div>
 
               <div className="flex justify-between items-center font-bold mt-2">
-                <small>{project?.raised} ETH Raised</small>
+                <small>{project?.raised} ETH Terkumpul</small>
                 <small className="flex justify-start items-center">
                   <FaEthereum />
                   <span>{project?.cost} ETH</span>
@@ -101,7 +117,7 @@ const ProjectDetails = ({ project }) => {
               rounded-full shadow-md hover:bg-green-700"
                     onClick={() => setGlobalState('backModal', 'scale-100')}
                   >
-                    Back Project
+                    Donasi
                   </button>
                 ) : null}
 

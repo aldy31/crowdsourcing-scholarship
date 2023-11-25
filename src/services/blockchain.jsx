@@ -58,19 +58,22 @@ const getEtheriumContract = async () => {
   }
 }
 
+
 const createProject = async ({
   title,
   description,
-  imageURL,
   cost,
   expiresAt,
+  uploadedImageCID,
+  uploadedTTDimage,
+  uploadedsyarat
 }) => {
   try {
     if (!ethereum) return alert('Please install Metamask')
 
     const contract = await getEtheriumContract()
     cost = ethers.utils.parseEther(cost)
-    tx = await contract.createProject(title, description, imageURL, cost, expiresAt)
+    tx = await contract.createProject(title, description, cost, uploadedImageCID, uploadedTTDimage, uploadedsyarat, expiresAt)
     await tx.wait()
     await loadProjects()
   } catch (error) {
@@ -82,14 +85,16 @@ const updateProject = async ({
   id,
   title,
   description,
-  imageURL,
+  uploadedImageCID,
+  uploadedTTDimage,
+  uploadedsyarat,
   expiresAt,
 }) => {
   try {
     if (!ethereum) return alert('Please install Metamask')
 
     const contract = await getEtheriumContract()
-    tx = await contract.updateProject(id, title, description, imageURL, expiresAt)
+    tx = await contract.updateProject(id, title, description,  uploadedImageCID, uploadedTTDimage, uploadedsyarat, expiresAt)
     await tx.wait()
     await loadProject(id)
   } catch (error) {
@@ -203,7 +208,9 @@ const structuredProjects = (projects) =>
       timestamp: new Date(project.timestamp.toNumber()).getTime(),
       expiresAt: new Date(project.expiresAt.toNumber()).getTime(),
       date: toDate(project.expiresAt.toNumber() * 1000),
-      imageURL: project.imageURL,
+      uploadedImageCID: project.uploadedImageCID,
+      uploadedTTDimage: project.uploadedTTDimage,
+      uploadedsyarat: project.uploadedsyarat,
       raised: parseInt(project.raised._hex) / 10 ** 18,
       cost: parseInt(project.cost._hex) / 10 ** 18,
       backers: project.backers.toNumber(),
@@ -230,6 +237,7 @@ const reportError = (error) => {
   console.log(error.message)
   throw new Error('No ethereum object.')
 }
+
 
 export {
   connectWallet,
